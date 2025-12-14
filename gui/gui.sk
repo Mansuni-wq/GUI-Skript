@@ -1,0 +1,40 @@
+#  💡 FUNCTION:
+#  gui_create(player, name, rows)
+#  gui_add_button(player, slot, item, name, action)
+#  gui_open(player)
+#  gui_handle_action(player, action)
+
+#  ➕ EXAMPLES:
+#  gui_create(player, "Main Menu", 3)
+#  gui_add_button(player, 11, diamond, "&bTeleport", "tp_spawn")
+#  gui_add_button(player, 15, emerald, "&aMoney Info", "show_money")
+#  gui_open(player)
+
+# =========================================================
+
+function gui_create(p: player, name: text, rows: number):
+    set {gui.%{_p}%::name} to {_name}
+    set {gui.%{_p}%::rows} to {_rows}
+    clear {gui.%{_p}%::buttons::*}
+
+function gui_add_button(p: player, slot: number, item: itemtype, name: text, action: text):
+    set {gui.%{_p}%::buttons::%{_slot}%::item} to {_item}
+    set {gui.%{_p}%::buttons::%{_slot}%::name} to {_name}
+    set {gui.%{_p}%::buttons::%{_slot}%::action} to {_action}
+
+function gui_open(p: player):
+    set {_rows} to {gui.%{_p}%::rows}
+    set {_inv} to a new chest inventory with {_rows} rows named "&a%{gui.%{_p}%::name}%"
+    loop {gui.%{_p}%::buttons::*}:
+        set {_slot} to loop-index
+        set {_item} to {gui.%{_p}%::buttons::%{_slot}%::item}
+        set {_iname} to {gui.%{_p}%::buttons::%{_slot}%::name}
+        set slot {_slot} of {_inv} to {_item} named {_iname}
+    open {_inv} to {_p}
+
+on inventory click:
+    set {_invname} to name of event-inventory
+    if {_invname} starts with "&a":
+        cancel event
+        set {_p} to player
+        set {_slot} to clicked slot
