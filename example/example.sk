@@ -1,0 +1,7 @@
+command /testgui:
+    trigger:
+        gui_create(player, "§eMain Menu", 3)
+        gui_add_button(player, 11, diamond, "&bTeleport", "tp_spawn")
+        gui_add_button(player, 15, emerald, "&aMoney Info", "show_money")
+        gui_add_button(player, 26, barrier, "&cClose", "close")
+        gui_open(player)
